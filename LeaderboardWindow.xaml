@@ -1,7 +1,7 @@
 <Window x:Class="WpfApp2.LeaderboardWindow"
 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Quiz Platform - Leaderboard" Height="600" Width="900"
+        Title="Quizelyangs - Leaderboard" Height="600" Width="900"
         WindowStartupLocation="CenterScreen"
  Background="#1a1a2e"
         Loaded="Window_Loaded">
