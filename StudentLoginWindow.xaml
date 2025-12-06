@@ -56,7 +56,7 @@ ResizeMode="NoResize"
         <Border Background="#0f0f1e" CornerRadius="20">
             <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" Width="450" Margin="40">
                 <!-- Icon -->
-                <TextBlock Text="👨‍🏫" FontSize="60" TextAlignment="Center" Margin="0,0,0,20"/>
+                <TextBlock Text="👤" FontSize="60" TextAlignment="Center" Margin="0,0,0,20"/>
 
                 <!-- Title -->
                 <TextBlock Text="Student Portal" 
