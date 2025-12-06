@@ -1,4 +1,4 @@
-﻿<Window x:Class="WpfApp2.LecturerLoginWindow"
+﻿<Window x:Class="WpfApp2.StudentLoginWindow"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
    Title="Quizelyangs' - Student Login" 
@@ -111,7 +111,7 @@ Height="50"
 
                 <!-- Back Link -->
                 <TextBlock TextAlignment="Center" Foreground="#b0b0c8" FontSize="13">
-    <Run Text="Not a lecturer? "/>
+    <Run Text="Not a Student? "/>
   <Hyperlink Click="BackLink_Click" Foreground="#00d4ff" TextDecorations="None">
       <Run Text="Select another role"/>
        </Hyperlink>
