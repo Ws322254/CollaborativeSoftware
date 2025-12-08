@@ -1,0 +1,44 @@
+﻿<Window x:Class="WpfApp2.QuizWindow"
+     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Quizelyangs' - Take Quiz" Height="700" Width="1000"
+     WindowStartupLocation="CenterScreen"
+ Background="#1a1a2e"
+        Loaded="Window_Loaded">
+    <Grid>
+        <StackPanel Orientation="Vertical" Margin="20">
+            <!-- Header -->
+  <TextBlock x:Name="QuizTitleBlock" Text="Quiz Title" FontSize="28" FontWeight="Bold" Foreground="#8b3dff" Margin="0,0,0,10"/>
+            <TextBlock x:Name="QuizDescriptionBlock" Text="Quiz Description" FontSize="14" Foreground="#888888" Margin="0,0,0,20"/>
+
+            <!-- Progress Bar -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+  <TextBlock Text="Question " Foreground="White" VerticalAlignment="Center"/>
+   <TextBlock x:Name="QuestionNumberBlock" Text="1/10" Foreground="#00d4ff" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/>
+         <ProgressBar x:Name="ProgressBar" Width="600" Height="20" Background="#2d2d44" Foreground="#8b3dff" Margin="20,0,0,0" VerticalAlignment="Center"/>
+      </StackPanel>
+
+  <!-- Question Display -->
+   <GroupBox Header="Question" Foreground="White" Margin="0,0,0,20" Padding="15">
+       <TextBlock x:Name="QuestionTextBlock" Text="Question text will appear here" Foreground="White" FontSize="16" TextWrapping="Wrap" Margin="0,0,0,20"/>
+       </GroupBox>
+
+   <!-- Answer Options -->
+      <GroupBox Header="Select Your Answer" Foreground="White" Margin="0,0,0,20" Padding="15">
+         <StackPanel Orientation="Vertical">
+      <RadioButton x:Name="OptionARadio" Content="" Foreground="White" FontSize="14" Margin="0,0,0,10"/>
+         <RadioButton x:Name="OptionBRadio" Content="" Foreground="White" FontSize="14" Margin="0,0,0,10"/>
+    <RadioButton x:Name="OptionCRadio" Content="" Foreground="White" FontSize="14" Margin="0,0,0,10"/>
+            <RadioButton x:Name="OptionDRadio" Content="" Foreground="White" FontSize="14"/>
+   </StackPanel>
+   </GroupBox>
+
+         <!-- Navigation Buttons -->
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+                <Button x:Name="PreviousButton" Content="← Previous" Click="PreviousButton_Click" Width="120" Height="40" Background="#555555" Foreground="White" FontSize="14" Cursor="Hand" Margin="10"/>
+        <Button x:Name="NextButton" Content="Next →" Click="NextButton_Click" Width="120" Height="40" Background="#8b3dff" Foreground="White" FontSize="14" Cursor="Hand" Margin="10"/>
+          <Button x:Name="SubmitButton" Content="Submit Quiz" Click="SubmitButton_Click" Width="150" Height="40" Background="#28a745" Foreground="White" FontSize="14" Cursor="Hand" Margin="10" Visibility="Collapsed"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>
