@@ -6,9 +6,9 @@ using System.Windows.Controls;
 
 namespace WpfApp2
 {
-    public partial class LecturerLoginWindow : Window
+    public partial class AdminLoginWindow : Window
     {
-        public LecturerLoginWindow()
+        public AdminLoginWindow()
         {
             InitializeComponent();
         }
@@ -25,17 +25,17 @@ namespace WpfApp2
                 return;
             }
 
-            // Get User
-            var user = GetUserFromDB(username);
+            // Get Admin User
+            var admin = GetAdminFromDB(username);
 
-            if (user == null)
+            if (admin == null)
             {
                 MessageBox.Show("Invalid username or password.");
                 return;
             }
 
             // Verify Password
-            bool passwordValid = VerifyPassword(password, user.PasswordHash, user.PasswordSalt);
+            bool passwordValid = VerifyPassword(password, admin.PasswordHash, admin.PasswordSalt);
 
             if (!passwordValid)
             {
@@ -45,7 +45,7 @@ namespace WpfApp2
 
             MessageBox.Show("Login successful!");
 
-            LecturerDashboardWindow dashboard = new LecturerDashboardWindow();
+            AdminDashboardWindow dashboard = new AdminDashboardWindow();
             dashboard.Show();
             this.Close();
         }
@@ -59,15 +59,15 @@ namespace WpfApp2
         }
 
         // DB Logic
-        private LecturerModel GetUserFromDB(string username)
+        private AdminModel GetAdminFromDB(string username)
         {
             // TODO: Replace with real database lookup
-            return new LecturerModel()
+            return new AdminModel()
             {
-                Username = "lecturer1",
+                Username = "admin1",
                 PasswordSalt = MockSalt,
                 PasswordHash = MockHashedPassword,
-                Email = "lecturer@example.com"
+                Email = "admin@example.com"
             };
         }
 
@@ -89,7 +89,7 @@ namespace WpfApp2
         private static readonly string MockHashedPassword = HashPassword("password123", MockSalt);
     }
 
-    public class LecturerModel
+    public class AdminModel
     {
         public string Username { get; set; }
         public string PasswordHash { get; set; }
