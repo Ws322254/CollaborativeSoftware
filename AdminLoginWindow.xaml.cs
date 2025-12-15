@@ -4,7 +4,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace WpfApp2
+namespace CollaborativeSoftware
 {
     public partial class AdminLoginWindow : Window
     {

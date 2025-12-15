@@ -1,4 +1,4 @@
-﻿<Window x:Class="WpfApp2.AdminLoginWindow"
+﻿<Window x:Class="CollaborativeSoftware.AdminLoginWindow"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
    Title="Quizelyangs - Admin Login" 

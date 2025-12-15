@@ -4,7 +4,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace WpfApp2
+namespace CollaborativeSoftware
 {
     public partial class StudentLoginWindow : Window
     {
@@ -36,7 +36,7 @@ namespace WpfApp2
 
             // Verify Password
             bool passwordValid = VerifyPassword(password, user.PasswordHash, user.PasswordSalt);
-
+            
             if (!passwordValid)
             {
                 MessageBox.Show("Invalid username or password.");
@@ -46,6 +46,11 @@ namespace WpfApp2
 
             StudentDashboardWindow dashboard = new StudentDashboardWindow();
             dashboard.Show();
+            this.Close();
+        }
+
+        private void BackLink_Click(object sender, RoutedEventArgs e)
+        {
             this.Close();
         }
 
@@ -79,6 +84,7 @@ namespace WpfApp2
         private const string MockSalt = "Yutens";
         private static readonly string MockHashedPassword = HashPassword("password123", MockSalt);
     }
+
 
     public class StudentModel
     {
