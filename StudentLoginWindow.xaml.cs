@@ -2,18 +2,23 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace CollaborativeSoftware
 {
     public partial class StudentLoginWindow : Window
     {
-        public StudentLoginWindow()
+        private readonly UserRole _role;
+        public StudentLoginWindow() : this(UserRole.Student)
         {
-            InitializeComponent();
         }
 
-        // Login Logic
+        public StudentLoginWindow(UserRole role)
+        {
+            InitializeComponent();
+            _role = role;
+        }
+
+        // Login Logic (NO 2FA)
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             string username = UsernameTextBox.Text.Trim();
@@ -25,7 +30,6 @@ namespace CollaborativeSoftware
                 return;
             }
 
-            // Get User
             var user = GetStudentFromDB(username);
 
             if (user == null)
@@ -34,14 +38,14 @@ namespace CollaborativeSoftware
                 return;
             }
 
-            // Verify Password
             bool passwordValid = VerifyPassword(password, user.PasswordHash, user.PasswordSalt);
-            
+
             if (!passwordValid)
             {
                 MessageBox.Show("Invalid username or password.");
                 return;
             }
+
             MessageBox.Show("Login successful!");
 
             StudentDashboardWindow dashboard = new StudentDashboardWindow();
@@ -51,13 +55,13 @@ namespace CollaborativeSoftware
 
         private void BackLink_Click(object sender, RoutedEventArgs e)
         {
+            RoleSelectionWindow w = new RoleSelectionWindow();
+            w.Show();
             this.Close();
         }
 
-        //DB Logic
         private StudentModel GetStudentFromDB(string username)
         {
-            // TODO: Replace with real database lookup
             return new StudentModel()
             {
                 Username = "student1",
@@ -67,10 +71,15 @@ namespace CollaborativeSoftware
             };
         }
 
-        //Hashing Algorithm
         public static string HashPassword(string password, string salt)
         {
-            var pbkdf2 = new Rfc2898DeriveBytes(password, Encoding.UTF8.GetBytes(salt), 100000, HashAlgorithmName.SHA256);
+            var pbkdf2 = new Rfc2898DeriveBytes(
+                password,
+                Encoding.UTF8.GetBytes(salt),
+                100000,
+                HashAlgorithmName.SHA256
+            );
+
             return Convert.ToBase64String(pbkdf2.GetBytes(32));
         }
 
@@ -80,11 +89,10 @@ namespace CollaborativeSoftware
             return storedHash == newHash;
         }
 
-        // Mock Data
         private const string MockSalt = "Yutens";
-        private static readonly string MockHashedPassword = HashPassword("password123", MockSalt);
+        private static readonly string MockHashedPassword =
+            HashPassword("password123", MockSalt);
     }
-
 
     public class StudentModel
     {

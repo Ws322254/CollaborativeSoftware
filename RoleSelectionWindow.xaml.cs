@@ -26,18 +26,19 @@ namespace CollaborativeSoftware
 
             if (selectedRole.Contains("Student"))
             {
-                StudentLoginWindow studentLogin = new StudentLoginWindow();
-                studentLogin.Show();
+                new StudentLoginWindow(UserRole.Student).Show();
+                //StudentLoginWindow studentLogin = new StudentLoginWindow(UserRole.Student);
+                //studentLogin.Show();
             }
             else if (selectedRole.Contains("Lecturer"))
             {
-                LecturerLoginWindow lecturerLogin = new LecturerLoginWindow();
-                lecturerLogin.Show();
+                new LecturerLoginWindow(UserRole.Lecturer).Show();
             }
             else if (selectedRole.Contains("Admin"))
             {
-                AdminLoginWindow adminLogin = new AdminLoginWindow();
-                adminLogin.Show();
+                //AdminLoginWindow adminLogin = new AdminLoginWindow(UserRole.Admin);
+                //adminLogin.Show();
+                new AdminLoginWindow(UserRole.Admin).Show();
             }
             else
             {

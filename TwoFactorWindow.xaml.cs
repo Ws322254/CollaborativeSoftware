@@ -1,25 +1,15 @@
-﻿using CollaborativeSoftware;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 namespace CollaborativeSoftware
 {
     public partial class TwoFactorWindow : Window
     {
-        public TwoFactorWindow()
+        private readonly UserRole _role;
+
+        public TwoFactorWindow(UserRole role)
         {
             InitializeComponent();
+            _role = role;
         }
 
         private void VerifyButton_Click(object sender, RoutedEventArgs e)
@@ -40,12 +30,19 @@ namespace CollaborativeSoftware
 
             MessageBox.Show("2FA successful!");
 
-            LecturerDashboardWindow dashboard = new LecturerDashboardWindow();
-            dashboard.Show();
+            if (_role == UserRole.Lecturer)
+            {
+                new LecturerDashboardWindow().Show();
+            }
+            else if (_role == UserRole.Admin)
+            {
+                new AdminDashboardWindow().Show();
+            }
+
             this.Close();
         }
 
-        private void CodeBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void CodeBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
 
         }
