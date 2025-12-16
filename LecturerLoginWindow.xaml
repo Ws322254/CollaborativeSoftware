@@ -1,4 +1,4 @@
-﻿<Window x:Class="WpfApp2.LecturerLoginWindow"
+﻿<Window x:Class="CollaborativeSoftware.LecturerLoginWindow"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
    Title="Quizelyangs' - Lecturer Login" 

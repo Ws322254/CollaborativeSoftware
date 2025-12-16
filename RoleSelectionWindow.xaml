@@ -1,4 +1,4 @@
-﻿<Window x:Class="WpfApp2.RoleSelectionWindow"
+﻿<Window x:Class="CollaborativeSoftware.RoleSelectionWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
      Title="Quizelyangs - Select Role" 
