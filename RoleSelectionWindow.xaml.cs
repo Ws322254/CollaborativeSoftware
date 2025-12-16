@@ -16,7 +16,36 @@ namespace CollaborativeSoftware
 
         private void ContinueButton_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: navigate based on selected role
+            if (RoleComboBox.SelectedItem == null)
+            {
+                MessageBox.Show("Please select a role.");
+                return;
+            }
+
+            string selectedRole = RoleComboBox.SelectedItem.ToString();
+
+            if (selectedRole.Contains("Student"))
+            {
+                StudentLoginWindow studentLogin = new StudentLoginWindow();
+                studentLogin.Show();
+            }
+            else if (selectedRole.Contains("Lecturer"))
+            {
+                LecturerLoginWindow lecturerLogin = new LecturerLoginWindow();
+                lecturerLogin.Show();
+            }
+            else if (selectedRole.Contains("Admin"))
+            {
+                AdminLoginWindow adminLogin = new AdminLoginWindow();
+                adminLogin.Show();
+            }
+            else
+            {
+                MessageBox.Show("Invalid role selected.");
+                return;
+            }
+
+            this.Close();
         }
     }
 }

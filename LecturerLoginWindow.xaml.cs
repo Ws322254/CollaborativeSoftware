@@ -13,8 +13,8 @@ namespace CollaborativeSoftware
             InitializeComponent();
         }
 
-        // Login Logic
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        // Login Logic (WITH 2FA)
+        private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             string username = UsernameTextBox.Text.Trim();
             string password = PasswordBox.Password;
@@ -43,11 +43,16 @@ namespace CollaborativeSoftware
                 return;
             }
 
-            MessageBox.Show("Login successful!");
+            // -------- 2FA START --------
+            MessageBox.Show("Password verified. Sending verification code...");
 
-            LecturerDashboardWindow dashboard = new LecturerDashboardWindow();
-            dashboard.Show();
+            string code = TwoFactorManager.GenerateCode();
+            await EmailService.Send2FACodeAsync(user.Email, code);
+
+            TwoFactorWindow twoFA = new TwoFactorWindow();
+            twoFA.Show();
             this.Close();
+            // -------- 2FA END --------
         }
 
         // Back Navigation
@@ -67,14 +72,20 @@ namespace CollaborativeSoftware
                 Username = "lecturer1",
                 PasswordSalt = MockSalt,
                 PasswordHash = MockHashedPassword,
-                Email = "lecturer@example.com"
+                Email = "butteruniverse951@gmail.com"
             };
         }
 
         // Hashing Algorithm
         public static string HashPassword(string password, string salt)
         {
-            var pbkdf2 = new Rfc2898DeriveBytes(password, Encoding.UTF8.GetBytes(salt), 100000, HashAlgorithmName.SHA256);
+            var pbkdf2 = new Rfc2898DeriveBytes(
+                password,
+                Encoding.UTF8.GetBytes(salt),
+                100000,
+                HashAlgorithmName.SHA256
+            );
+
             return Convert.ToBase64String(pbkdf2.GetBytes(32));
         }
 
@@ -86,7 +97,8 @@ namespace CollaborativeSoftware
 
         // Mock Data
         private const string MockSalt = "Yutens";
-        private static readonly string MockHashedPassword = HashPassword("password123", MockSalt);
+        private static readonly string MockHashedPassword =
+            HashPassword("password123", MockSalt);
     }
 
     public class LecturerModel
