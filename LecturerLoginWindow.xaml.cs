@@ -2,19 +2,27 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace CollaborativeSoftware
 {
     public partial class LecturerLoginWindow : Window
     {
-        public LecturerLoginWindow()
+        private readonly UserRole _role;
+
+        // REQUIRED by WPF (designer / default navigation)
+        public LecturerLoginWindow() : this(UserRole.Lecturer)
         {
-            InitializeComponent();
         }
 
-        // Login Logic
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        // Used when role is passed explicitly
+        public LecturerLoginWindow(UserRole role)
+        {
+            InitializeComponent();
+            _role = role;
+        }
+
+        // Login Logic (WITH 2FA)
+        private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             string username = UsernameTextBox.Text.Trim();
             string password = PasswordBox.Password;
@@ -25,7 +33,6 @@ namespace CollaborativeSoftware
                 return;
             }
 
-            // Get User
             var user = GetUserFromDB(username);
 
             if (user == null)
@@ -34,7 +41,6 @@ namespace CollaborativeSoftware
                 return;
             }
 
-            // Verify Password
             bool passwordValid = VerifyPassword(password, user.PasswordHash, user.PasswordSalt);
 
             if (!passwordValid)
@@ -43,14 +49,16 @@ namespace CollaborativeSoftware
                 return;
             }
 
-            MessageBox.Show("Login successful!");
+            MessageBox.Show("Password verified. Sending verification code...");
 
-            LecturerDashboardWindow dashboard = new LecturerDashboardWindow();
-            dashboard.Show();
+            string code = TwoFactorManager.GenerateCode();
+            await EmailService.Send2FACodeAsync(user.Email, code);
+
+            TwoFactorWindow twoFA = new TwoFactorWindow(_role);
+            twoFA.Show();
             this.Close();
         }
 
-        // Back Navigation
         private void BackLink_Click(object sender, RoutedEventArgs e)
         {
             RoleSelectionWindow w = new RoleSelectionWindow();
@@ -58,23 +66,26 @@ namespace CollaborativeSoftware
             this.Close();
         }
 
-        // DB Logic
         private LecturerModel GetUserFromDB(string username)
         {
-            // TODO: Replace with real database lookup
             return new LecturerModel()
             {
                 Username = "lecturer1",
                 PasswordSalt = MockSalt,
                 PasswordHash = MockHashedPassword,
-                Email = "lecturer@example.com"
+                Email = "butteruniverse951@gmail.com"
             };
         }
 
-        // Hashing Algorithm
         public static string HashPassword(string password, string salt)
         {
-            var pbkdf2 = new Rfc2898DeriveBytes(password, Encoding.UTF8.GetBytes(salt), 100000, HashAlgorithmName.SHA256);
+            var pbkdf2 = new Rfc2898DeriveBytes(
+                password,
+                Encoding.UTF8.GetBytes(salt),
+                100000,
+                HashAlgorithmName.SHA256
+            );
+
             return Convert.ToBase64String(pbkdf2.GetBytes(32));
         }
 
@@ -84,9 +95,9 @@ namespace CollaborativeSoftware
             return storedHash == newHash;
         }
 
-        // Mock Data
         private const string MockSalt = "Yutens";
-        private static readonly string MockHashedPassword = HashPassword("password123", MockSalt);
+        private static readonly string MockHashedPassword =
+            HashPassword("password123", MockSalt);
     }
 
     public class LecturerModel
