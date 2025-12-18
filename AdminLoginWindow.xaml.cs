@@ -49,25 +49,10 @@ namespace CollaborativeSoftware
                 return;
             }
 
-            // HARD-CODED EMAIL FOR TESTING PURPOSES
-            if (admin.Email == "admin@test.com")
-            {
-                LecturerDashboardWindow dashboard = new LecturerDashboardWindow();
-                dashboard.Show();
-                this.Close();
-                return;
-            }
+            MessageBox.Show("Login successful!");
 
-            MessageBox.Show("Password verified. Sending verification code...");
-
-            string code = TwoFactorManager.GenerateCode();
-            await EmailService.Send2FACodeAsync(admin.Email, code);
-
-            Session.CurrentUserEmail = admin.Email;
-            Session.CurrentUserRole = _role;
-
-            TwoFactorWindow twoFA = new TwoFactorWindow(_role);
-            twoFA.Show();
+            AdminDashboardWindow dashboard = new AdminDashboardWindow();
+            dashboard.Show();
             this.Close();
         }
 

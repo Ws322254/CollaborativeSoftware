@@ -30,15 +30,8 @@ namespace CollaborativeSoftware
 
             MessageBox.Show("2FA successful!");
 
-            if (_role == UserRole.Lecturer)
-            {
-                new LecturerDashboardWindow().Show();
-            }
-            else if (_role == UserRole.Admin)
-            {
-                new AdminDashboardWindow().Show();
-            }
-
+            StudentDashboardWindow dashboard = new StudentDashboardWindow();
+            dashboard.Show();
             this.Close();
         }
 
