@@ -1,9 +1,9 @@
 using System.Windows;
 using System.Windows.Documents;
-using WpfApp2.Data;
-using WpfApp2.Services;
+using CollaborativeSoftware.Data;
+using CollaborativeSoftware.Services;
 
-namespace WpfApp2
+namespace CollaborativeSoftware
 {
     public partial class RegisterWindow : Window
     {

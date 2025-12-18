@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "CollaborativeSoftware/1.0.0": {
+        "runtime": {
+          "CollaborativeSoftware.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "CollaborativeSoftware/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

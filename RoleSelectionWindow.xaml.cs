@@ -1,7 +1,7 @@
 using System;
 using System.Windows;
 
-namespace WpfApp2
+namespace CollaborativeSoftware
 {
     public partial class RoleSelectionWindow : Window
     {
