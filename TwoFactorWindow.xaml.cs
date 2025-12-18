@@ -30,16 +30,17 @@ namespace CollaborativeSoftware
 
             MessageBox.Show("2FA successful!");
 
-            if (_role == UserRole.Lecturer)
-            {
-                new LecturerDashboardWindow().Show();
-            }
-            else if (_role == UserRole.Admin)
-            {
-                new AdminDashboardWindow().Show();
-            }
-
+            StudentDashboardWindow dashboard = new StudentDashboardWindow();
+            dashboard.Show();
             this.Close();
+        }
+
+        private async void ResendLink_Click(object sender, RoutedEventArgs e)
+        {
+            string newCode = TwoFactorManager.GenerateCode();
+            await EmailService.Send2FACodeAsync(Session.CurrentUserEmail, newCode);
+
+            MessageBox.Show("A new verification code has been sent.");
         }
 
         private void CodeBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)

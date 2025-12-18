@@ -49,16 +49,11 @@ namespace CollaborativeSoftware
                 return;
             }
 
-            // -------- 2FA START --------
-            MessageBox.Show("Password verified. Sending verification code...");
+            MessageBox.Show("Login successful!");
 
-            string code = TwoFactorManager.GenerateCode();
-            await EmailService.Send2FACodeAsync(admin.Email, code);
-
-            TwoFactorWindow twoFA = new TwoFactorWindow(_role);
-            twoFA.Show();
+            AdminDashboardWindow dashboard = new AdminDashboardWindow();
+            dashboard.Show();
             this.Close();
-            // -------- 2FA END --------
         }
 
         private void BackLink_Click(object sender, RoutedEventArgs e)

@@ -49,13 +49,10 @@ namespace CollaborativeSoftware
                 return;
             }
 
-            MessageBox.Show("Password verified. Sending verification code...");
+            MessageBox.Show("Login successful!");
 
-            string code = TwoFactorManager.GenerateCode();
-            await EmailService.Send2FACodeAsync(user.Email, code);
-
-            TwoFactorWindow twoFA = new TwoFactorWindow(_role);
-            twoFA.Show();
+            LecturerDashboardWindow dashboard = new LecturerDashboardWindow();
+            dashboard.Show();
             this.Close();
         }
 

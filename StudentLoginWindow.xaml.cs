@@ -19,7 +19,7 @@ namespace CollaborativeSoftware
         }
 
         // Login Logic (NO 2FA)
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             string username = UsernameTextBox.Text.Trim();
             string password = PasswordBox.Password;
@@ -46,11 +46,18 @@ namespace CollaborativeSoftware
                 return;
             }
 
-            MessageBox.Show("Login successful!");
+            MessageBox.Show("Password verified. Sending verification code...");
 
-            StudentDashboardWindow dashboard = new StudentDashboardWindow();
-            dashboard.Show();
+            string code = TwoFactorManager.GenerateCode();
+            await EmailService.Send2FACodeAsync(user.Email, code);
+
+            Session.CurrentUserEmail = user.Email;
+            Session.CurrentUserRole = _role;
+
+            TwoFactorWindow twoFA = new TwoFactorWindow(_role);
+            twoFA.Show();
             this.Close();
+
         }
 
         private void BackLink_Click(object sender, RoutedEventArgs e)
@@ -67,7 +74,7 @@ namespace CollaborativeSoftware
                 Username = "student1",
                 PasswordSalt = MockSalt,
                 PasswordHash = MockHashedPassword,
-                Email = "student@example.com"
+                Email = "butteruniverse951@gmail.com"
             };
         }
 
