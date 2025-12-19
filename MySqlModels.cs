@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WpfApp2.Models
+namespace CollaborativeSoftware.Models
 {
     /// <summary>
   /// Maps to MySQL 'User' table - Users with Role enum

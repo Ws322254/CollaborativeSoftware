@@ -2,12 +2,17 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using CollaborativeSoftware.Data;
+using CollaborativeSoftware.Models;
 
 namespace CollaborativeSoftware
 {
     public partial class LecturerLoginWindow : Window
     {
         private readonly UserRole _role;
+        private readonly MySqlDbContext _context;
 
         // REQUIRED by WPF (designer / default navigation)
         public LecturerLoginWindow() : this(UserRole.Lecturer)
@@ -19,41 +24,68 @@ namespace CollaborativeSoftware
         {
             InitializeComponent();
             _role = role;
+            _context = new MySqlDbContext();
         }
 
         // Login Logic (WITH 2FA)
         private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            string username = UsernameTextBox.Text.Trim();
+            string email = UsernameTextBox.Text.Trim();
             string password = PasswordBox.Password;
 
-            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             {
-                MessageBox.Show("Please enter a username and a password");
+                MessageBox.Show("Please enter an email and a password");
                 return;
             }
 
-            var user = GetUserFromDB(username);
-
-            if (user == null)
+            try
             {
-                MessageBox.Show("Invalid username or password.");
-                return;
+                var lecturer = await _context.Lecturers
+                    .FirstOrDefaultAsync(l => l.Email.ToLower() == email.ToLower() && !l.IsAdmin);
+
+                if (lecturer == null)
+                {
+                    var adminCheck = await _context.Lecturers
+                        .FirstOrDefaultAsync(l => l.Email.ToLower() == email.ToLower() && l.IsAdmin);
+
+                    if (adminCheck != null)
+                    {
+                        RecordLoginAuditAsync(0, "Lecturer", false);
+                        MessageBox.Show("This account is an admin account. Please use Admin login.");
+                        return;
+                    }
+
+                    RecordLoginAuditAsync(0, "Lecturer", false);
+                    MessageBox.Show("Invalid email or password.");
+                    return;
+                }
+
+                var passwordHash = HashPassword(password);
+                if (lecturer.PasswordHash != passwordHash)
+                {
+                    RecordLoginAuditAsync(lecturer.LecturerId, "Lecturer", false);
+                    MessageBox.Show("Invalid email or password.");
+                    return;
+                }
+
+                RecordLoginAuditAsync(lecturer.LecturerId, "Lecturer", true);
+
+                Session.CurrentUserEmail = lecturer.Email;
+                Session.CurrentUserRole = _role;
+                Session.CurrentUserId = lecturer.LecturerId;
+
+                MessageBox.Show("Login successful!");
+
+                LecturerDashboardWindow dashboard = new LecturerDashboardWindow();
+                dashboard.Show();
+                this.Close();
             }
-
-            bool passwordValid = VerifyPassword(password, user.PasswordHash, user.PasswordSalt);
-
-            if (!passwordValid)
+            catch (Exception ex)
             {
-                MessageBox.Show("Invalid username or password.");
-                return;
+                var innerMessage = ex.InnerException?.Message ?? ex.Message;
+                MessageBox.Show($"Database error: {innerMessage}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-            MessageBox.Show("Login successful!");
-
-            LecturerDashboardWindow dashboard = new LecturerDashboardWindow();
-            dashboard.Show();
-            this.Close();
         }
 
         private void BackLink_Click(object sender, RoutedEventArgs e)
@@ -63,45 +95,42 @@ namespace CollaborativeSoftware
             this.Close();
         }
 
-        private LecturerModel GetUserFromDB(string username)
+        private async void RecordLoginAuditAsync(int userId, string role, bool success)
         {
-            return new LecturerModel()
+            try
             {
-                Username = "lecturer1",
-                PasswordSalt = MockSalt,
-                PasswordHash = MockHashedPassword,
-                Email = "butteruniverse951@gmail.com"
-            };
+                using (var auditContext = new MySqlDbContext())
+                {
+                    var audit = new Models.LoginAudit
+                    {
+                        UserId = userId,
+                        Role = role,
+                        Success = success,
+                        Timestamp = DateTime.Now
+                    };
+
+                    auditContext.LoginAudits.Add(audit);
+                    await auditContext.SaveChangesAsync();
+                }
+            }
+            catch
+            {
+                // Silent fail for audit
+            }
         }
 
-        public static string HashPassword(string password, string salt)
+        public static string HashPassword(string password)
         {
-            var pbkdf2 = new Rfc2898DeriveBytes(
-                password,
-                Encoding.UTF8.GetBytes(salt),
-                100000,
-                HashAlgorithmName.SHA256
-            );
-
-            return Convert.ToBase64String(pbkdf2.GetBytes(32));
+            using (var sha256 = SHA256.Create())
+            {
+                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                return Convert.ToBase64String(hashedBytes);
+            }
         }
 
-        public static bool VerifyPassword(string password, string storedHash, string storedSalt)
+        public static bool VerifyPassword(string password, string hash)
         {
-            string newHash = HashPassword(password, storedSalt);
-            return storedHash == newHash;
+            return HashPassword(password) == hash;
         }
-
-        private const string MockSalt = "Yutens";
-        private static readonly string MockHashedPassword =
-            HashPassword("password123", MockSalt);
-    }
-
-    public class LecturerModel
-    {
-        public string Username { get; set; }
-        public string PasswordHash { get; set; }
-        public string PasswordSalt { get; set; }
-        public string Email { get; set; }
     }
 }

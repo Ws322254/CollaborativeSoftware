@@ -1,7 +1,8 @@
+using System;
 using Microsoft.EntityFrameworkCore;
-using WpfApp2.Models;
+using CollaborativeSoftware.Models;
 
-namespace WpfApp2.Data
+namespace CollaborativeSoftware.Data
 {
     /// <summary>
     /// MySQL Database Context for Quiz Platform
