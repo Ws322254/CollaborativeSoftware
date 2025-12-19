@@ -15,3 +15,4 @@ Ws32254 - Alexander Barnett
 - Student Dashboard
 - Lecturer Dashboard
 - Templates
+- Sign Out Functionality
