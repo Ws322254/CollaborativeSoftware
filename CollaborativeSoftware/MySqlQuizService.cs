@@ -383,10 +383,179 @@ existingAnswer.IsCorrect = isCorrect;
  return await _context.StudentManagements.CountAsync(s => s.IsActive);
       }
 
-      public async Task<int> GetPendingApprovalCountAsync()
+        public async Task<int> GetPendingApprovalCountAsync()
         {
         return await _context.StudentManagements.CountAsync(s => !s.IsApproved && s.IsActive);
     }
+
+        // Lecturer Management Methods
+        public async Task<List<Lecturer>> GetAllLecturersAsync()
+        {
+            try
+            {
+                // Use raw SQL to only select columns that exist in database
+                using (var freshContext = new MySqlDbContext())
+                {
+                    return await freshContext.Lecturers
+                        .FromSqlRaw("SELECT LecturerID, FirstName, LastName, Email, PasswordHash, CreatedAt, IsAdmin FROM Lecturer ORDER BY LastName, FirstName")
+                        .ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error in GetAllLecturersAsync: {ex.Message}");
+                return new List<Lecturer>();
+            }
+        }
+
+        public async Task<Lecturer?> GetLecturerByIdAsync(int lecturerId)
+        {
+            try
+            {
+                return await _context.Lecturers
+                    .FromSqlRaw("SELECT LecturerID, FirstName, LastName, Email, PasswordHash, CreatedAt, IsAdmin FROM Lecturer WHERE LecturerID = {0}", lecturerId)
+                    .FirstOrDefaultAsync();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<Lecturer?> GetLecturerByEmailAsync(string email)
+        {
+            try
+            {
+                return await _context.Lecturers
+                    .FromSqlRaw("SELECT LecturerID, FirstName, LastName, Email, PasswordHash, CreatedAt, IsAdmin FROM Lecturer WHERE Email = {0}", email)
+                    .FirstOrDefaultAsync();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<Lecturer> CreateLecturerAsync(string firstName, string lastName, string email, string passwordHash)
+        {
+            try
+            {
+                var existingLecturer = await GetLecturerByEmailAsync(email);
+                if (existingLecturer != null)
+                    throw new InvalidOperationException("A lecturer with this email already exists.");
+
+                // Use raw SQL to insert, including all required columns
+                await _context.Database.ExecuteSqlRawAsync(
+                    "INSERT INTO Lecturer (FirstName, LastName, Email, PasswordHash, CreatedAt, IsAdmin) VALUES ({0}, {1}, {2}, {3}, {4}, {5})",
+                    firstName, lastName, email, passwordHash, DateTime.Now, 0);
+
+                // Clear the context to avoid caching issues and retry retrieval
+                _context.ChangeTracker.Clear();
+
+                // Return the newly created lecturer by querying with a fresh context
+                using (var freshContext = new MySqlDbContext())
+                {
+                    var newLecturer = await freshContext.Lecturers
+                        .FromSqlRaw("SELECT LecturerID, FirstName, LastName, Email, PasswordHash, CreatedAt, IsAdmin FROM Lecturer WHERE Email = {0}", email)
+                        .FirstOrDefaultAsync();
+                    
+                    if (newLecturer == null)
+                        throw new Exception("Failed to retrieve newly created lecturer");
+
+                    return newLecturer;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to create lecturer: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<bool> UpdateLecturerAsync(int lecturerId, string firstName, string lastName, string email)
+        {
+            var lecturer = await _context.Lecturers.FindAsync(lecturerId);
+            if (lecturer == null) return false;
+
+            // Check if email is already in use by another lecturer
+            var existingLecturer = await _context.Lecturers
+                .FirstOrDefaultAsync(l => l.Email == email && l.LecturerId != lecturerId);
+            if (existingLecturer != null)
+                throw new InvalidOperationException("This email is already in use by another lecturer.");
+
+            lecturer.FirstName = firstName;
+            lecturer.LastName = lastName;
+            lecturer.Email = email;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> ResetLecturerPasswordAsync(int lecturerId, string newPasswordHash)
+        {
+            var lecturer = await _context.Lecturers.FindAsync(lecturerId);
+            if (lecturer == null) return false;
+
+            lecturer.PasswordHash = newPasswordHash;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> DisableLecturerAsync(int lecturerId)
+        {
+            var lecturer = await _context.Lecturers.FindAsync(lecturerId);
+            if (lecturer == null) return false;
+
+            // Note: IsActive column may not exist in database, so we use a raw SQL update
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                    "UPDATE Lecturer SET IsActive = 0 WHERE LecturerID = {0}", lecturerId);
+                return true;
+            }
+            catch
+            {
+                // If IsActive column doesn't exist, silently fail
+                return false;
+            }
+        }
+
+        public async Task<bool> EnableLecturerAsync(int lecturerId)
+        {
+            var lecturer = await _context.Lecturers.FindAsync(lecturerId);
+            if (lecturer == null) return false;
+
+            // Note: IsActive column may not exist in database, so we use a raw SQL update
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                    "UPDATE Lecturer SET IsActive = 1 WHERE LecturerID = {0}", lecturerId);
+                return true;
+            }
+            catch
+            {
+                // If IsActive column doesn't exist, silently fail
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteLecturerAsync(int lecturerId)
+        {
+            var lecturer = await _context.Lecturers.FindAsync(lecturerId);
+            if (lecturer == null) return false;
+
+            // Check if lecturer has created tests
+            var hasTests = await _context.Tests.AnyAsync(t => t.LecturerId == lecturerId);
+            if (hasTests)
+                throw new InvalidOperationException("Cannot delete lecturer - they have created tests.");
+
+            _context.Lecturers.Remove(lecturer);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<int> GetLecturerCountAsync()
+        {
+            return await _context.Lecturers.CountAsync(l => l.IsActive);
+        }
     }
 
     public class LeaderboardEntry

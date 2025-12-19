@@ -41,6 +41,28 @@ namespace CollaborativeSoftware
 
             try
             {
+                // HARDCODED TEST LOGIN - Remove this in production
+                if (email.ToLower() == "admin@test.com" && password == "Admin@123")
+                {
+                    RecordLoginAuditAsync(1, "Admin", true);
+
+                    var testApplicationUser = new ApplicationUser
+                    {
+                        Id = 1,
+                        Email = "admin@test.com",
+                        FirstName = "Test",
+                        LastName = "Admin",
+                        Role = "Admin",
+                        IsActive = true,
+                        CreatedAt = DateTime.Now
+                    };
+
+                    AdminDashboardWindow testDashboard = new AdminDashboardWindow(testApplicationUser);
+                    testDashboard.Show();
+                    this.Close();
+                    return;
+                }
+
                 var admin = await _context.Users
                     .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower() && u.Role == "Admin");
 
@@ -81,7 +103,18 @@ namespace CollaborativeSoftware
 
                 MessageBox.Show("Login successful!");
 
-                AdminDashboardWindow dashboard = new AdminDashboardWindow();
+                var applicationUser = new ApplicationUser
+                {
+                    Id = admin.UserId,
+                    Email = admin.Email,
+                    FirstName = admin.Email.Split('@')[0],
+                    LastName = "Admin",
+                    Role = "Admin",
+                    IsActive = admin.IsActive,
+                    CreatedAt = admin.CreatedAt
+                };
+
+                AdminDashboardWindow dashboard = new AdminDashboardWindow(applicationUser);
                 dashboard.Show();
                 this.Close();
             }

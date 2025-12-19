@@ -110,6 +110,12 @@ namespace CollaborativeSoftware.Models
         [MaxLength(255)]
   public string PasswordHash { get; set; } = string.Empty;
 
+        [Column("IsActive")]
+        public bool IsActive { get; set; } = true;
+
+        [Column("IsAdmin")]
+        public bool IsAdmin { get; set; } = false;
+
         [Column("CreatedAt")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 

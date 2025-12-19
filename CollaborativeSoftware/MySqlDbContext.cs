@@ -86,7 +86,7 @@ namespace CollaborativeSoftware.Data
         entity.Property(e => e.LastLoginTime).HasColumnName("LastLoginTime");
  });
 
- // Configure Lecturer
+     // Configure Lecturer
     modelBuilder.Entity<Lecturer>(entity =>
      {
      entity.ToTable("Lecturer");
@@ -96,7 +96,10 @@ namespace CollaborativeSoftware.Data
         entity.Property(e => e.LastName).HasColumnName("LastName").HasMaxLength(50);
   entity.Property(e => e.Email).HasColumnName("Email").HasMaxLength(100);
 entity.Property(e => e.PasswordHash).HasColumnName("PasswordHash").HasMaxLength(255);
+       entity.Property(e => e.IsAdmin).HasColumnName("IsAdmin");
        entity.Property(e => e.CreatedAt).HasColumnName("CreatedAt");
+       // Note: IsActive column doesn't exist in database, so we ignore it
+       entity.Ignore(e => e.IsActive);
    });
 
          // Configure Subject

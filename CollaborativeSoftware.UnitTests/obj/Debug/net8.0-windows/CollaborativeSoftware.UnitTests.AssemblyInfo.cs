@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CollaborativeSoftware.UnitTests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1bcbb3ff815c39a8c1df83a43eaa5f67e6f8e4fd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4e55f9505fb460172524f275abf0873912bcab99")]
 [assembly: System.Reflection.AssemblyProductAttribute("CollaborativeSoftware.UnitTests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CollaborativeSoftware.UnitTests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

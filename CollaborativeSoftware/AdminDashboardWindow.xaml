@@ -8,6 +8,11 @@
     Loaded="Window_Loaded">
     <Window.Resources>
         <conv:ActiveConverter x:Key="ActiveConverter" />
+        <Style x:Key="DataGridTextColumnStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
     </Window.Resources>
     <Grid>
   <StackPanel Orientation="Vertical" Margin="20">
@@ -47,11 +52,13 @@
       <Button Content="➕ Create New Subject" Click="CreateSubjectButton_Click" Width="150" Height="35" Background="#8b3dff" Foreground="White" Cursor="Hand" Margin="0,0,0,10"/>
 
      <DataGrid x:Name="SubjectsDataGrid" Background="#1a1a2e" Foreground="White" BorderBrush="#555555" 
-         BorderThickness="1" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" Height="350">
+         BorderThickness="1" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" Height="350"
+         RowBackground="#2d2d44" AlternatingRowBackground="#252538" HeadersVisibility="Column">
          <DataGrid.Columns>
- <DataGridTextColumn Header="Subject Name" Binding="{Binding Name}" Width="250"/>
-             <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="350"/>
-             <DataGridTextColumn Header="Created" Binding="{Binding CreatedDate, StringFormat='dd MMM yyyy'}" Width="150"/>
+             <DataGridTextColumn Header="Subject Name" Binding="{Binding SubjectName}" Width="*" 
+                 ElementStyle="{StaticResource DataGridTextColumnStyle}"/>
+             <DataGridTextColumn Header="Status" Binding="{Binding IsActive, Converter={StaticResource ActiveConverter}}" Width="120"
+                 ElementStyle="{StaticResource DataGridTextColumnStyle}"/>
        </DataGrid.Columns>
    </DataGrid>
 
@@ -70,13 +77,17 @@
            <Button Content="➕ Create New Lecturer" Click="CreateLecturerButton_Click" Width="150" Height="35" Background="#8b3dff" Foreground="White" Cursor="Hand" Margin="0,0,0,10"/>
 
           <DataGrid x:Name="LecturersDataGrid" Background="#1a1a2e" Foreground="White" BorderBrush="#555555" 
- BorderThickness="1" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" Height="350">
+ BorderThickness="1" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" Height="350"
+ RowBackground="#2d2d44" AlternatingRowBackground="#252538" HeadersVisibility="Column">
                     <DataGrid.Columns>
-          <DataGridTextColumn Header="Name" Binding="{Binding FirstName}" Width="150"/>
-         <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="250"/>
-            <DataGridTextColumn Header="Username" Binding="{Binding Username}" Width="150"/>
-         <DataGridTextColumn Header="Status" Binding="{Binding IsActive, Converter={StaticResource ActiveConverter}}" Width="100"/>
-         <DataGridTextColumn Header="Created" Binding="{Binding CreatedDate, StringFormat='dd MMM yyyy'}" Width="120"/>
+          <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}" Width="150"
+              ElementStyle="{StaticResource DataGridTextColumnStyle}"/>
+          <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" Width="150"
+              ElementStyle="{StaticResource DataGridTextColumnStyle}"/>
+         <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*"
+              ElementStyle="{StaticResource DataGridTextColumnStyle}"/>
+         <DataGridTextColumn Header="Status" Binding="{Binding IsActive, Converter={StaticResource ActiveConverter}}" Width="100"
+              ElementStyle="{StaticResource DataGridTextColumnStyle}"/>
         </DataGrid.Columns>
            </DataGrid>
 
@@ -84,6 +95,7 @@
       <Button Content="✎ Edit Selected" Click="EditLecturerButton_Click" Width="120" Height="35" Background="#00d4ff" Foreground="White" Cursor="Hand" Margin="5"/>
           <Button Content="🔑 Reset Password" Click="ResetPasswordButton_Click" Width="130" Height="35" Background="#ffc107" Foreground="White" Cursor="Hand" Margin="5"/>
              <Button Content="⛔ Disable" Click="DisableLecturerButton_Click" Width="80" Height="35" Background="#dc3545" Foreground="White" Cursor="Hand" Margin="5"/>
+             <Button Content="🗑️ Delete" Click="DeleteLecturerButton_Click" Width="80" Height="35" Background="#900000" Foreground="White" Cursor="Hand" Margin="5"/>
      </StackPanel>
         </StackPanel>
             </TabItem>

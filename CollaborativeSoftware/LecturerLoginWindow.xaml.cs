@@ -41,8 +41,28 @@ namespace CollaborativeSoftware
 
             try
             {
-                var lecturer = await _context.Lecturers
-                    .FirstOrDefaultAsync(l => l.Email.ToLower() == email.ToLower());
+                Lecturer? lecturer = null;
+
+                try
+                {
+                    // Try standard query first
+                    lecturer = await _context.Lecturers
+                        .FirstOrDefaultAsync(l => l.Email.ToLower() == email.ToLower());
+                }
+                catch
+                {
+                    // If IsActive column doesn't exist, use raw SQL query
+                    try
+                    {
+                        lecturer = await _context.Lecturers
+                            .FromSqlRaw("SELECT LecturerID, FirstName, LastName, Email, PasswordHash, CreatedAt FROM Lecturer WHERE LOWER(Email) = LOWER({0})", email)
+                            .FirstOrDefaultAsync();
+                    }
+                    catch
+                    {
+                        lecturer = null;
+                    }
+                }
 
                 if (lecturer == null)
                 {
