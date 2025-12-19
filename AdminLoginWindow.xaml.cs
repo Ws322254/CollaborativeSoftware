@@ -41,18 +41,18 @@ namespace CollaborativeSoftware
 
             try
             {
-                var admin = await _context.Lecturers
-                    .FirstOrDefaultAsync(l => l.Email.ToLower() == email.ToLower() && l.IsAdmin);
+                var admin = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower() && u.Role == "Admin");
 
                 if (admin == null)
                 {
-                    var lecturerCheck = await _context.Lecturers
-                        .FirstOrDefaultAsync(l => l.Email.ToLower() == email.ToLower() && !l.IsAdmin);
+                    var userCheck = await _context.Users
+                        .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower() && u.Role != "Admin");
 
-                    if (lecturerCheck != null)
+                    if (userCheck != null)
                     {
                         RecordLoginAuditAsync(0, "Admin", false);
-                        MessageBox.Show("This account is a lecturer account. Please use Lecturer login.");
+                        MessageBox.Show("This account does not have admin privileges. Please use the appropriate login.");
                         return;
                     }
 
@@ -62,18 +62,22 @@ namespace CollaborativeSoftware
                 }
 
                 var passwordHash = HashPassword(password);
-                if (admin.PasswordHash != passwordHash)
+                
+                // Trim the database hash and compare
+                var dbHash = admin.PasswordHash?.Trim() ?? string.Empty;
+                
+                if (dbHash != passwordHash)
                 {
-                    RecordLoginAuditAsync(admin.LecturerId, "Admin", false);
+                    RecordLoginAuditAsync(admin.UserId, "Admin", false);
                     MessageBox.Show("Invalid email or password.");
                     return;
                 }
 
-                RecordLoginAuditAsync(admin.LecturerId, "Admin", true);
+                RecordLoginAuditAsync(admin.UserId, "Admin", true);
 
                 Session.CurrentUserEmail = admin.Email;
                 Session.CurrentUserRole = _role;
-                Session.CurrentUserId = admin.LecturerId;
+                Session.CurrentUserId = admin.UserId;
 
                 MessageBox.Show("Login successful!");
 

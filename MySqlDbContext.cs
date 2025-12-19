@@ -52,6 +52,7 @@ namespace CollaborativeSoftware.Data
          entity.Property(e => e.UserId).HasColumnName("UserID");
          entity.Property(e => e.Email).HasColumnName("Email").HasMaxLength(100);
         entity.Property(e => e.Role).HasColumnName("Role").HasMaxLength(20);
+         entity.Property(e => e.PasswordHash).HasColumnName("Password").HasMaxLength(255);
            entity.Property(e => e.IsActive).HasColumnName("IsActive");
   entity.Property(e => e.CreatedAt).HasColumnName("CreatedAt");
   });
@@ -84,7 +85,6 @@ namespace CollaborativeSoftware.Data
         entity.Property(e => e.LastName).HasColumnName("LastName").HasMaxLength(50);
   entity.Property(e => e.Email).HasColumnName("Email").HasMaxLength(100);
 entity.Property(e => e.PasswordHash).HasColumnName("PasswordHash").HasMaxLength(255);
-       entity.Property(e => e.IsAdmin).HasColumnName("IsAdmin");
        entity.Property(e => e.CreatedAt).HasColumnName("CreatedAt");
    });
 

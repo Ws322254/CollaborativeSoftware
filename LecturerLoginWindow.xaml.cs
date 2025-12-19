@@ -42,20 +42,10 @@ namespace CollaborativeSoftware
             try
             {
                 var lecturer = await _context.Lecturers
-                    .FirstOrDefaultAsync(l => l.Email.ToLower() == email.ToLower() && !l.IsAdmin);
+                    .FirstOrDefaultAsync(l => l.Email.ToLower() == email.ToLower());
 
                 if (lecturer == null)
                 {
-                    var adminCheck = await _context.Lecturers
-                        .FirstOrDefaultAsync(l => l.Email.ToLower() == email.ToLower() && l.IsAdmin);
-
-                    if (adminCheck != null)
-                    {
-                        RecordLoginAuditAsync(0, "Lecturer", false);
-                        MessageBox.Show("This account is an admin account. Please use Admin login.");
-                        return;
-                    }
-
                     RecordLoginAuditAsync(0, "Lecturer", false);
                     MessageBox.Show("Invalid email or password.");
                     return;
