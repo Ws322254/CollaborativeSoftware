@@ -109,12 +109,20 @@ Height="50"
         Style="{StaticResource ModernLoginButton}"
         Margin="0,0,0,25"/>
 
+                <!-- Create Account Link -->
+                <TextBlock TextAlignment="Center" Foreground="#b0b0c8" FontSize="13" Margin="0,0,0,15">
+                    <Run Text="Don't have an account? "/>
+                    <Hyperlink Click="CreateAccountLink_Click" Foreground="#00d4ff" TextDecorations="None">
+                        <Run Text="Create one"/>
+                    </Hyperlink>
+                </TextBlock>
+
                 <!-- Back Link -->
                 <TextBlock TextAlignment="Center" Foreground="#b0b0c8" FontSize="13">
-    <Run Text="Not a Student? "/>
-  <Hyperlink Click="BackLink_Click" Foreground="#00d4ff" TextDecorations="None">
-      <Run Text="Select another role"/>
-       </Hyperlink>
+                    <Run Text="Not a Student? "/>
+                    <Hyperlink Click="BackLink_Click" Foreground="#00d4ff" TextDecorations="None">
+                        <Run Text="Select another role"/>
+                    </Hyperlink>
                 </TextBlock>
             </StackPanel>
         </Border>

@@ -121,7 +121,7 @@ namespace CollaborativeSoftware
                     IsApproved = false,
                     IsActive = true,
                     CreatedAt = currentTime,
-                    LastLoginTime = null
+                    LastLoginTime = currentTime
                 };
 
                 _context.StudentManagements.Add(newStudent);

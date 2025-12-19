@@ -103,6 +103,13 @@ namespace CollaborativeSoftware
             }
         }
 
+        private void CreateAccountLink_Click(object sender, RoutedEventArgs e)
+        {
+            RegisterWindow w = new RegisterWindow();
+            w.Show();
+            this.Close();
+        }
+
         private void BackLink_Click(object sender, RoutedEventArgs e)
         {
             RoleSelectionWindow w = new RoleSelectionWindow();
