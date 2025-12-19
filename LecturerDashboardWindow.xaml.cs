@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using CollaborativeSoftware.Data;
@@ -11,7 +15,6 @@ namespace CollaborativeSoftware
     {
         private readonly ApplicationUser _currentUser;
         private readonly MySqlDbContext _dbContext;
-        private readonly MySqlAuthService _authService;
         private readonly MySqlQuizService _quizService;
         private List<StudentManagementRecord> _allStudents = new();
       private List<Test> _allTests = new();
@@ -23,13 +26,12 @@ namespace CollaborativeSoftware
         public LecturerDashboardWindow(ApplicationUser user)
         {
             try
- {
-         InitializeComponent();
-    _currentUser = user;
-           _dbContext = new MySqlDbContext();
-                _authService = new MySqlAuthService(_dbContext);
-        _quizService = new MySqlQuizService(_dbContext);
-         UserNameBlock.Text = $"{_currentUser.FirstName} {_currentUser.LastName}";
+            {
+                InitializeComponent();
+                _currentUser = user;
+                _dbContext = new MySqlDbContext();
+                _quizService = new MySqlQuizService(_dbContext);
+                UserNameBlock.Text = $"{_currentUser.FirstName} {_currentUser.LastName}";
             }
      catch (Exception ex)
  {
@@ -317,7 +319,7 @@ return;
       {
        try
       {
-    var success = await _authService.ApproveStudentRecordAsync(selectedStudent.StudentId);
+    var success = await _quizService.ApproveStudentRecordAsync(selectedStudent.StudentId);
 
      if (success)
      {
@@ -364,9 +366,9 @@ return;
 
                 if (result == MessageBoxResult.Yes)
         {
-                try
+         try
          {
-           var success = await _authService.DisableStudentRecordAsync(selectedStudent.StudentId);
+           var success = await _quizService.DisableStudentRecordAsync(selectedStudent.StudentId);
 
          if (success)
       {

@@ -1,9 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
-using WpfApp2.Data;
-using WpfApp2.Models;
-using WpfApp2.Services;
+using CollaborativeSoftware.Data;
+using CollaborativeSoftware.Models;
+using CollaborativeSoftware.Services;
 
-namespace WpfApp2
+namespace CollaborativeSoftware
 {
     public partial class CreateQuestionWindow : Window
     {
@@ -189,7 +192,7 @@ namespace WpfApp2
      {
              helpMessage = "\n\n?? SOLUTION: The Question table is missing required columns.\n" +
            "Please run the SQL script in phpMyAdmin:\n" +
-        "WpfApp2/SQL_SCRIPTS/create_question_table.sql";
+        "CollaborativeSoftware/SQL_SCRIPTS/create_question_table.sql";
      }
      else if (errorMessage.Contains("foreign key constraint"))
        {
@@ -200,7 +203,7 @@ namespace WpfApp2
            {
           helpMessage = "\n\n?? SOLUTION: The Question table doesn't exist.\n" +
         "Please run the SQL script in phpMyAdmin:\n" +
-     "WpfApp2/SQL_SCRIPTS/complete_database_schema.sql";
+     "CollaborativeSoftware/SQL_SCRIPTS/complete_database_schema.sql";
       }
       
    MessageBox.Show($"Error saving question: {errorMessage}{helpMessage}", "Error", 

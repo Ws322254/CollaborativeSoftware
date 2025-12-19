@@ -60,3 +60,13 @@ C:\Users\matty\source\repos\CollaborativeSoftware\bin\Debug\net8.0-windows\Micro
 C:\Users\matty\source\repos\CollaborativeSoftware\bin\Debug\net8.0-windows\MySqlConnector.dll
 C:\Users\matty\source\repos\CollaborativeSoftware\bin\Debug\net8.0-windows\Pomelo.EntityFrameworkCore.MySql.dll
 C:\Users\matty\source\repos\CollaborativeSoftware\obj\Debug\net8.0-windows\Collabor.046AF267.Up2Date
+C:\Users\matty\source\repos\CollaborativeSoftware\obj\Debug\net8.0-windows\CreateQuestionWindow.baml
+C:\Users\matty\source\repos\CollaborativeSoftware\obj\Debug\net8.0-windows\CreateTestWindow.baml
+C:\Users\matty\source\repos\CollaborativeSoftware\obj\Debug\net8.0-windows\EditQuestionWindow.baml
+C:\Users\matty\source\repos\CollaborativeSoftware\obj\Debug\net8.0-windows\EditTestWindow.baml
+C:\Users\matty\source\repos\CollaborativeSoftware\obj\Debug\net8.0-windows\MySqlQuizWindow.baml
+C:\Users\matty\source\repos\CollaborativeSoftware\obj\Debug\net8.0-windows\CreateQuestionWindow.g.cs
+C:\Users\matty\source\repos\CollaborativeSoftware\obj\Debug\net8.0-windows\CreateTestWindow.g.cs
+C:\Users\matty\source\repos\CollaborativeSoftware\obj\Debug\net8.0-windows\EditQuestionWindow.g.cs
+C:\Users\matty\source\repos\CollaborativeSoftware\obj\Debug\net8.0-windows\EditTestWindow.g.cs
+C:\Users\matty\source\repos\CollaborativeSoftware\obj\Debug\net8.0-windows\MySqlQuizWindow.g.cs

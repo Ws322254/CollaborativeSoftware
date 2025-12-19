@@ -77,7 +77,18 @@ namespace CollaborativeSoftware
 
                 MessageBox.Show("Login successful!");
 
-                LecturerDashboardWindow dashboard = new LecturerDashboardWindow();
+                var applicationUser = new ApplicationUser
+                {
+                    Id = lecturer.LecturerId,
+                    Email = lecturer.Email,
+                    FirstName = lecturer.FirstName,
+                    LastName = lecturer.LastName,
+                    Role = "Lecturer",
+                    IsActive = true,
+                    CreatedAt = lecturer.CreatedAt
+                };
+
+                LecturerDashboardWindow dashboard = new LecturerDashboardWindow(applicationUser);
                 dashboard.Show();
                 this.Close();
             }

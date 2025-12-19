@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.Threading.Tasks;
+using System.Windows;
+using CollaborativeSoftware.Models;
 
 namespace CollaborativeSoftware
 {
@@ -30,7 +33,18 @@ namespace CollaborativeSoftware
 
             MessageBox.Show("2FA successful!");
 
-            StudentDashboardWindow dashboard = new StudentDashboardWindow();
+            var applicationUser = new ApplicationUser
+            {
+                Id = Session.CurrentUserId,
+                Email = Session.CurrentUserEmail,
+                FirstName = string.Empty,
+                LastName = string.Empty,
+                Role = "Student",
+                IsActive = true,
+                CreatedAt = DateTime.Now
+            };
+
+            StudentDashboardWindow dashboard = new StudentDashboardWindow(applicationUser);
             dashboard.Show();
             this.Close();
         }

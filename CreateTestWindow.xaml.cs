@@ -1,10 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using WpfApp2.Data;
-using WpfApp2.Models;
-using WpfApp2.Services;
+using CollaborativeSoftware.Data;
+using CollaborativeSoftware.Models;
+using CollaborativeSoftware.Services;
 
-namespace WpfApp2
+namespace CollaborativeSoftware
 {
     public partial class CreateTestWindow : Window
     {
@@ -159,7 +163,7 @@ if (SubjectComboBox.SelectedItem is SubjectEntity selectedSubject)
    else if (errorMessage.Contains("doesn't exist"))
             {
          helpMessage = "\n\n?? SOLUTION: The Test table doesn't exist.\n" +
-                 "Run the SQL script: WpfApp2/SQL_SCRIPTS/complete_database_schema.sql";
+                 "Run the SQL script: CollaborativeSoftware/SQL_SCRIPTS/complete_database_schema.sql";
                 }
            
      MessageBox.Show($"Error creating test: {errorMessage}{helpMessage}", "Error", 
