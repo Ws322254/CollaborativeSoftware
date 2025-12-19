@@ -185,7 +185,7 @@ namespace CollaborativeSoftware
             return fallbackNumber;
         }
 
-        private static string HashPassword(string password)
+        public static string HashPassword(string password)
         {
             using (var sha256 = SHA256.Create())
             {
@@ -194,7 +194,7 @@ namespace CollaborativeSoftware
             }
         }
 
-        private static bool VerifyPassword(string password, string hash)
+        public static bool VerifyPassword(string password, string hash)
         {
             return HashPassword(password) == hash;
         }

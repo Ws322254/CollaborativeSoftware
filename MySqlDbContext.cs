@@ -26,19 +26,30 @@ namespace CollaborativeSoftware.Data
         public DbSet<StudentAnswerEntity> StudentAnswers { get; set; } = null!;
         public DbSet<LoginAudit> LoginAudits { get; set; } = null!;
 
+        public MySqlDbContext()
+        {
+        }
+
+        public MySqlDbContext(DbContextOptions<MySqlDbContext> options) : base(options)
+        {
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
- // Configure MySQL connection using Pomelo
-    options.UseMySql(ConnectionString, 
-   ServerVersion.AutoDetect(ConnectionString),
- mySqlOptions =>
-      {
-    mySqlOptions.EnableRetryOnFailure(
-           maxRetryCount: 3,
-        maxRetryDelay: TimeSpan.FromSeconds(5),
-          errorNumbersToAdd: null);
-         });
-  }
+            if (!options.IsConfigured)
+            {
+                // Configure MySQL connection using Pomelo
+                options.UseMySql(ConnectionString, 
+                   ServerVersion.AutoDetect(ConnectionString),
+                 mySqlOptions =>
+                      {
+                    mySqlOptions.EnableRetryOnFailure(
+                           maxRetryCount: 3,
+                        maxRetryDelay: TimeSpan.FromSeconds(5),
+                          errorNumbersToAdd: null);
+                         });
+            }
+        }
 
      protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
