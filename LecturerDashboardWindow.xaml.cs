@@ -1,11 +1,11 @@
 using System.Windows;
 using System.Windows.Controls;
-using WpfApp2.Data;
-using WpfApp2.Models;
-using WpfApp2.Services;
+using CollaborativeSoftware.Data;
+using CollaborativeSoftware.Models;
+using CollaborativeSoftware.Services;
 using Microsoft.EntityFrameworkCore;
 
-namespace WpfApp2
+namespace CollaborativeSoftware
 {
     public partial class LecturerDashboardWindow : Window
     {

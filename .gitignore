@@ -1,5 +1,6 @@
 # Prerequisites
 *.d
+*.vs
 
 # Object files
 *.o
@@ -54,3 +55,45 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# Build folders
+bin/
+obj/
+out/
+Debug/
+Release/
+
+# Visual Studio files
+.vs/
+*.user
+*.userosscache
+*.suo
+
+# Auto-generated WPF files
+*.g.cs
+*.g.i.cs
+*.baml
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+project.assets.json
+project.lock.json
+*.nuget.props
+*.nuget.targets
+
+# Logs
+*.log
+
+# Cache
+*.cache
+*.db
+
+# Backup
+*.bak
+*.tmp
+
+# Other
+GeneratedInternalTypeHelper.g.cs
+

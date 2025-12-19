@@ -1,0 +1,51 @@
+﻿using System.Windows;
+
+namespace CollaborativeSoftware
+{
+    public partial class TwoFactorWindow : Window
+    {
+        private readonly UserRole _role;
+
+        public TwoFactorWindow(UserRole role)
+        {
+            InitializeComponent();
+            _role = role;
+        }
+
+        private void VerifyButton_Click(object sender, RoutedEventArgs e)
+        {
+            string enteredCode = CodeBox.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(enteredCode))
+            {
+                MessageBox.Show("Please enter the verification code.");
+                return;
+            }
+
+            if (!TwoFactorManager.ValidateCode(enteredCode))
+            {
+                MessageBox.Show("Invalid or expired code.");
+                return;
+            }
+
+            MessageBox.Show("2FA successful!");
+
+            StudentDashboardWindow dashboard = new StudentDashboardWindow();
+            dashboard.Show();
+            this.Close();
+        }
+
+        private async void ResendLink_Click(object sender, RoutedEventArgs e)
+        {
+            string newCode = TwoFactorManager.GenerateCode();
+            await EmailService.Send2FACodeAsync(Session.CurrentUserEmail, newCode);
+
+            MessageBox.Show("A new verification code has been sent.");
+        }
+
+        private void CodeBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+
+        }
+    }
+}
