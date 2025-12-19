@@ -1,0 +1,122 @@
+﻿<Window x:Class="CollaborativeSoftware.AdminLoginWindow"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+   Title="Quizelyangs - Admin Login" 
+  Height="700" 
+Width="700"
+  WindowStartupLocation="CenterScreen"
+   Background="#0f0f1e"
+ResizeMode="NoResize"
+ WindowStyle="None"
+    AllowsTransparency="True"
+ FontFamily="Segoe UI">
+    
+    <Window.Resources>
+   <!-- Input Box Style -->
+   <Style x:Key="ModernTextBox" TargetType="TextBox">
+ <Setter Property="Background" Value="#2d2d44"/>
+ <Setter Property="Foreground" Value="White"/>
+   <Setter Property="BorderBrush" Value="#8b3dff"/>
+  <Setter Property="BorderThickness" Value="0,0,0,2"/>
+    <Setter Property="Padding" Value="15,12"/>
+          <Setter Property="FontSize" Value="15"/>
+   <Setter Property="CaretBrush" Value="#8b3dff"/>
+   </Style>
+    
+        <!-- Button Style -->
+   <Style x:Key="ModernLoginButton" TargetType="Button">
+        <Setter Property="Background" Value="#8b3dff"/>
+ <Setter Property="Foreground" Value="White"/>
+ <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+  <Setter Property="Padding" Value="25,12"/>
+            <Setter Property="BorderThickness" Value="0"/>
+ <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+       <Setter.Value>
+         <ControlTemplate TargetType="Button">
+      <Border Background="{TemplateBinding Background}" CornerRadius="10" Padding="{TemplateBinding Padding}">
+    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+     </Border>
+    <ControlTemplate.Triggers>
+     <Trigger Property="IsMouseOver" Value="True">
+<Setter Property="Background" Value="#a855ff"/>
+     </Trigger>
+        <Trigger Property="IsPressed" Value="True">
+   <Setter Property="Background" Value="#7c2d85"/>
+   </Trigger>
+    </ControlTemplate.Triggers>
+     </ControlTemplate>
+    </Setter.Value>
+   </Setter>
+    </Style>
+   </Window.Resources>
+ 
+ <Grid>
+        <Border Background="#0f0f1e" CornerRadius="20">
+        <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" Width="450" Margin="40">
+      <!-- Icon -->
+  <TextBlock Text="⚙️" FontSize="60" TextAlignment="Center" Margin="0,0,0,20"/>
+      
+    <!-- Title -->
+      <TextBlock Text="Admin Dashboard" 
+    FontSize="40" 
+   FontWeight="Bold" 
+ Foreground="#8b3dff" 
+            TextAlignment="Center" 
+     Margin="0,0,0,10"/>
+      
+ <!-- Subtitle -->
+      <TextBlock Text="System administration and configuration" 
+  FontSize="14" 
+  Foreground="#b0b0c8" 
+   TextAlignment="Center" 
+      Margin="0,0,0,40"/>
+        
+      <!-- Username/Email -->
+         <TextBlock Text="Username or Email" 
+   Foreground="#b0b0c8" 
+   Margin="0,0,0,8" 
+  FontSize="14"
+  FontWeight="SemiBold"/>
+    <TextBox x:Name="UsernameTextBox" 
+Height="45" 
+         Padding="15,12" 
+        FontSize="15" 
+        Style="{StaticResource ModernTextBox}"
+   Margin="0,0,0,20"/>
+  
+        <!-- Password -->
+    <TextBlock Text="Password" 
+    Foreground="#b0b0c8" 
+      Margin="0,0,0,8" 
+ FontSize="14"
+    FontWeight="SemiBold"/>
+  <PasswordBox x:Name="PasswordBox" 
+   Height="45" 
+     Padding="15,12" 
+     FontSize="15" 
+        Background="#2d2d44" 
+    Foreground="White"
+  BorderBrush="#8b3dff"
+       BorderThickness="0,0,0,2"
+        Margin="0,0,0,30"/>
+ 
+  <!-- Login Button -->
+  <Button Content="Access System" 
+  Click="LoginButton_Click" 
+  Height="50"
+     Style="{StaticResource ModernLoginButton}"
+         Margin="0,0,0,25"/>
+   
+      <!-- Back Link -->
+   <TextBlock TextAlignment="Center" Foreground="#b0b0c8" FontSize="13">
+     <Run Text="Not an admin? "/>
+  <Hyperlink Click="BackLink_Click" Foreground="#00d4ff" TextDecorations="None">
+     <Run Text="Select another role"/>
+      </Hyperlink>
+  </TextBlock>
+        </StackPanel>
+     </Border>
+    </Grid>
+</Window>
