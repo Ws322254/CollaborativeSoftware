@@ -1,8 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using WpfApp2.Data;
-using WpfApp2.Models;
+using CollaborativeSoftware.Data;
+using CollaborativeSoftware.Models;
 
-namespace WpfApp2.Services
+namespace CollaborativeSoftware.Services
 {
     public class MySqlQuizService
     {

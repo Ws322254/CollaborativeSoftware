@@ -2,12 +2,18 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using CollaborativeSoftware.Data;
+using CollaborativeSoftware.Models;
 
 namespace CollaborativeSoftware
 {
     public partial class StudentLoginWindow : Window
     {
         private readonly UserRole _role;
+        private readonly MySqlDbContext _context;
+
         public StudentLoginWindow() : this(UserRole.Student)
         {
         }
@@ -16,48 +22,85 @@ namespace CollaborativeSoftware
         {
             InitializeComponent();
             _role = role;
+            _context = new MySqlDbContext();
         }
 
         // Login Logic (NO 2FA)
         private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            string username = UsernameTextBox.Text.Trim();
+            string email = UsernameTextBox.Text.Trim();
             string password = PasswordBox.Password;
 
-            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             {
-                MessageBox.Show("Please enter a username and a password");
+                MessageBox.Show("Please enter an email and a password");
                 return;
             }
 
-            var user = GetStudentFromDB(username);
-
-            if (user == null)
+            try
             {
-                MessageBox.Show("Invalid username or password.");
-                return;
+                var student = await _context.StudentManagements
+                    .FirstOrDefaultAsync(s => s.Email.ToLower() == email.ToLower());
+
+                if (student == null)
+                {
+                    RecordLoginAuditAsync(0, "Student", false);
+                    MessageBox.Show("Invalid email or password.");
+                    return;
+                }
+
+                var passwordHash = HashPassword(password);
+                if (student.PasswordHash != passwordHash)
+                {
+                    RecordLoginAuditAsync(student.StudentId, "Student", false);
+                    MessageBox.Show("Invalid email or password.");
+                    return;
+                }
+
+                if (!student.IsApproved)
+                {
+                    RecordLoginAuditAsync(student.StudentId, "Student", false);
+                    MessageBox.Show("Your account is pending approval by a lecturer.");
+                    return;
+                }
+
+                if (!student.IsActive)
+                {
+                    RecordLoginAuditAsync(student.StudentId, "Student", false);
+                    MessageBox.Show("Your account has been disabled.");
+                    return;
+                }
+
+                try
+                {
+                    student.LastLoginTime = DateTime.Now;
+                    await _context.SaveChangesAsync();
+                }
+                catch
+                {
+                    // Log failure but allow login to proceed
+                }
+
+                RecordLoginAuditAsync(student.StudentId, "Student", true);
+
+                Session.CurrentUserEmail = student.Email;
+                Session.CurrentUserRole = _role;
+                Session.CurrentUserId = student.StudentId;
+
+                MessageBox.Show("Password verified. Sending verification code...");
+
+                string code = TwoFactorManager.GenerateCode();
+                await EmailService.Send2FACodeAsync(student.Email, code);
+
+                TwoFactorWindow twoFA = new TwoFactorWindow(_role);
+                twoFA.Show();
+                this.Close();
             }
-
-            bool passwordValid = VerifyPassword(password, user.PasswordHash, user.PasswordSalt);
-
-            if (!passwordValid)
+            catch (Exception ex)
             {
-                MessageBox.Show("Invalid username or password.");
-                return;
+                var innerMessage = ex.InnerException?.Message ?? ex.Message;
+                MessageBox.Show($"Database error: {innerMessage}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-            MessageBox.Show("Password verified. Sending verification code...");
-
-            string code = TwoFactorManager.GenerateCode();
-            await EmailService.Send2FACodeAsync(user.Email, code);
-
-            Session.CurrentUserEmail = user.Email;
-            Session.CurrentUserRole = _role;
-
-            TwoFactorWindow twoFA = new TwoFactorWindow(_role);
-            twoFA.Show();
-            this.Close();
-
         }
 
         private void BackLink_Click(object sender, RoutedEventArgs e)
@@ -67,45 +110,42 @@ namespace CollaborativeSoftware
             this.Close();
         }
 
-        private StudentModel GetStudentFromDB(string username)
+        private async void RecordLoginAuditAsync(int userId, string role, bool success)
         {
-            return new StudentModel()
+            try
             {
-                Username = "student1",
-                PasswordSalt = MockSalt,
-                PasswordHash = MockHashedPassword,
-                Email = "butteruniverse951@gmail.com"
-            };
+                using (var auditContext = new MySqlDbContext())
+                {
+                    var audit = new Models.LoginAudit
+                    {
+                        UserId = userId,
+                        Role = role,
+                        Success = success,
+                        Timestamp = DateTime.Now
+                    };
+
+                    auditContext.LoginAudits.Add(audit);
+                    await auditContext.SaveChangesAsync();
+                }
+            }
+            catch
+            {
+                // Silent fail for audit
+            }
         }
 
-        public static string HashPassword(string password, string salt)
+        public static string HashPassword(string password)
         {
-            var pbkdf2 = new Rfc2898DeriveBytes(
-                password,
-                Encoding.UTF8.GetBytes(salt),
-                100000,
-                HashAlgorithmName.SHA256
-            );
-
-            return Convert.ToBase64String(pbkdf2.GetBytes(32));
+            using (var sha256 = SHA256.Create())
+            {
+                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                return Convert.ToBase64String(hashedBytes);
+            }
         }
 
-        public static bool VerifyPassword(string password, string storedHash, string storedSalt)
+        public static bool VerifyPassword(string password, string hash)
         {
-            string newHash = HashPassword(password, storedSalt);
-            return storedHash == newHash;
+            return HashPassword(password) == hash;
         }
-
-        private const string MockSalt = "Yutens";
-        private static readonly string MockHashedPassword =
-            HashPassword("password123", MockSalt);
-    }
-
-    public class StudentModel
-    {
-        public string Username { get; set; }
-        public string PasswordHash { get; set; }
-        public string PasswordSalt { get; set; }
-        public string Email { get; set; }
     }
 }

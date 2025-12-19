@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CollaborativeSoftware")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2c3aed4f03245258a59be9ad03d7dd0f6ebb59fd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+122107b598f62528e65eba67f5ca4d6501619277")]
 [assembly: System.Reflection.AssemblyProductAttribute("CollaborativeSoftware")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CollaborativeSoftware")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
