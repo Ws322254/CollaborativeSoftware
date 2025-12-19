@@ -1,9 +1,9 @@
 using System.Windows;
-using WpfApp2.Data;
-using WpfApp2.Models;
-using WpfApp2.Services;
+using CollaborativeSoftware.Data;
+using CollaborativeSoftware.Models;
+using CollaborativeSoftware.Services;
 
-namespace WpfApp2
+namespace CollaborativeSoftware
 {
     public partial class ResultsWindow : Window
     {

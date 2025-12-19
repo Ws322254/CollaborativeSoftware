@@ -1,7 +1,7 @@
-<Window x:Class="WpfApp2.ResultsWindow"
+<Window x:Class="CollaborativeSoftware.ResultsWindow"
      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      Title="Quiz Platform Results History" Height="600" Width="1000"
+      Title="Quizelyangs Results History" Height="600" Width="1000"
  WindowStartupLocation="CenterScreen"
  Background="#1a1a2e"
   Loaded="Window_Loaded">
